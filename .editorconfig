@@ -1,0 +1,17 @@
+# top-most EditorConfig file
+root = true
+
+# rules for every file
+[*]
+charset = utf-8
+end_of_line = lf
+insert_final_newline = true
+indent_style = space
+trim_trailing_whitespace = true
+
+# rules for file types
+[*.{js,html,css,yaml,sh}]
+indent_size = 2
+
+[*.{java,scala,gradle,xml}]
+indent_size = 4
