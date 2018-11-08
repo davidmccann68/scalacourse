@@ -8,9 +8,9 @@ import scala.collection.mutable.ListBuffer
   *
   * @param args basket items, which for the sake of this tutorial are just names
   */
-class PriceBasket(val args: Seq[String]) {
+class PriceBasket(private val args: Seq[String]) {
 
-    var _items = new ListBuffer[Item]
+    private val _items = new ListBuffer[Item]
 
     for(arg <- args) {
         arg match {
@@ -33,13 +33,7 @@ class PriceBasket(val args: Seq[String]) {
       * @return the basket subtotal
       */
     def subtotal(): BigDecimal = {
-        var retVal = BigDecimal.valueOf(0)
-
-        for(item <- items) {
-            retVal += item.price
-        }
-
-        return retVal
+        items.map(i => i.price()).sum
     }
 
     /**
@@ -49,12 +43,7 @@ class PriceBasket(val args: Seq[String]) {
       * @return                 the basket total
       */
     def total(specialOffers: Seq[SpecialOffer]): BigDecimal = {
-        var retVal = subtotal()
-
-        for(offer <- specialOffers) {
-            retVal += offer.apply(items)
-        }
-
-        return retVal
+        val discounts = specialOffers.map(o => o.apply(items())).sum
+        subtotal() + discounts
     }
 }

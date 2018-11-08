@@ -1,10 +1,12 @@
 package com.reivertech.bjss
 
+import java.time.LocalDate
+
 
 class ShoppingTripMain {
 
     def main(args: Array[String]): Unit = {
-        price(args)
+        price(args, LocalDate.now())
     }
 
     /**
@@ -12,16 +14,17 @@ class ShoppingTripMain {
       * also prints output to the console as a side-effect (quel horreur!).
       *
       * @param args names of items to put in the basket
+      * @param date date the basket is created
       * @return     the total price of the basket
       */
-    def price(args: Array[String]) : BigDecimal = {
-        var basket = new PriceBasket(args)
+    def price(args: Array[String], date: LocalDate) : BigDecimal = {
+        val basket = new PriceBasket(args)
 
         val applesOffer = new SpecialOffer("Apples 10% off", tenPercentOffApples)
         val twoSoupOffer = new SpecialOffer("Half price loaf with 2 soups", buyTwoSoupGetHalfPriceBread)
 
-        for(item <- basket.items) {
-            println(item.name + ":\t\t" + fmt(item.price))
+        for(item <- basket.items()) {
+            println(item.name + ":\t\t" + fmt(item.price()))
         }
 
         val subtotal = basket.subtotal()
@@ -33,8 +36,8 @@ class ShoppingTripMain {
 
         for(offer <- Seq(applesOffer, twoSoupOffer)) {
 
-            if (offer.isValid()) {
-                val discount = offer.apply(basket.items)
+            if (offer.valid(date)) {
+                val discount = offer.apply(basket.items())
 
                 if(discount < BigDecimal.valueOf(0)) {
                     println(offer.name + ":\t" + fmt(discount))
